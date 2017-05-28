@@ -69,3 +69,57 @@
 			   
 	行业的潜规则：
 		如果某个函数为构造函数，那么函数名的首字母要大写。
+	有性能问题 
+		原型：prototype 能够解决性能问题。(*函数*身上才有的)
+		***函数.prototype 值为 对象 
+		给构造函数加上了一个class
+		id
+		***原型链:对象身上有原型链,但是没有原型。
+		***原型:函数身上既有原型也有原型链。
+		原型链是什么：
+			实例化对象与构造函数下原型的桥梁。
+		1.如果从对象身上去查找某个方法，如果没有，还会继续查找
+		2.还会通过对象身上的原型链去查找
+		3.构造函数的原型
+	function Teacher(name,age,job){
+		this.myName = name;
+		this.myAge = age;
+		this.myJob = job;
+//		this.say = function(){
+//			alert(this.myJob);
+//		}
+	}
+	
+	Teacher.prototype.say = function(){
+		alert(this.myJob);
+	};
+	
+	var t = new Teacher('nizp',38,'前端111111');
+	var t2 = new Teacher('chenbin',3,'前端222222');
+	
+//	t.say = function(){
+//		alert(11111);
+//	}
+
+	console.log(t);
+	
+//	console.log(t.__proto__ == Teacher.prototype);
+	
+	t.say();
+//	t2.say();
+
+	实例化对象的链儿 ==  构造函数的原型
+	t.say  ->  t.__proto__  -> Teacher.prototype
+	Teacher.prototype = {} -> Teacher.prototype.__proto__
+	Object.prototype.say
+	对象自身的优先级最高   > 这个对象的构造函数的原型 > Object.prototype
+函数的原型，只给函数的实例化对象使用。 
+	1.从对象身上找
+		对象身上有没有  （有就找到了）没有继续找
+		对象身上的原型链找 -> 等同于找这个对象的构造函数的原型 （有就找到了）没有继续找
+		构造函数原型下的原型链 -> Object.原型（有就找到了，没有就结束）
+	2.从函数身上找
+		如果函数自身没有 （有就找到了）没有继续找
+		找函数的原型链（函数的原型，只给函数的实例化对象使用）
+		Function.prototype  （有就找到了）没有继续找
+		Object.原型（有就找到了，没有就结束）
