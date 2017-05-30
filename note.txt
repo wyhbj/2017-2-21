@@ -189,3 +189,79 @@
 	}
 	var t = new Tab('box');
 	t.init('click');
+	hasOwnProperty: 
+		这个对象自身有没有这个属性。
+	obj.hasOwnProperty(属性名称)	
+		返回值为布尔值。是自身的就返回true，反之false
+	constructor:
+		查看某个对象是由哪个构造函数构造出来的。
+	constructor非常容易被修改，如果使用对象赋值的情况下，constructor会被修改
+		这个时候去查看对象的构造函数是不准确的。
+		解决：
+			手动修改constructor指向。
+	instanceof 
+		二元运算符
+	左值是不是右值构造出来的,或者左值是不是右值的儿子
+	注意：
+		左值一定要为对象类型的。不然都为false
+		返回值为布尔值，是就为true，反之false
+例子：拖拽
+	function Drag(id){
+		this.box = document.getElementById(id);
+		this.disX = 0;
+		this.disY = 0;
+	}
+	Drag.prototype.init = function(){
+		var _this = this;
+		this.box.addEventListener('mousedown',function(ev){
+			_this.fnDown(ev);
+		});
+	}
+	Drag.prototype.fnDown = function(ev){
+		this.disX = ev.pageX - this.box.offsetLeft;
+		this.disY = ev.pageY - this.box.offsetTop;
+		var _this = this;
+		var Move = function(ev){
+			_this.fnMove(ev);
+		}
+		var Up = function(ev){
+			_this.fnUp(ev,Move,Up);
+		}
+		document.addEventListener('mousemove',Move);
+		document.addEventListener('mouseup',Up);
+		
+		ev.preventDefault();
+	}
+	Drag.prototype.fnMove = function(ev){
+		this.box.style.left = ev.pageX - this.disX + 'px';
+		this.box.style.top = ev.pageY - this.disY + 'px';
+	}
+	Drag.prototype.fnUp = function(ev,move,up){
+		document.removeEventListener('mousemove',move);
+		document.removeEventListener('mouseup',up);
+	}
+	var d = new Drag('div1');
+	d.init();
+	面向对象的继承：
+	 	能够拥有父类的属性或者方法，也有自己的一些特征。
+	最常见的继承（在工作中真的基本不用，但是面试最喜欢问）：
+	 	拷贝继承{
+	 		1.属性继承:
+	 			调用父类，通过call或者apply来修正this指向来完成。
+	 		2.方法继承
+	 			for in父类原型下的方法给子类的原型
+	 		注意：
+	 			在拷贝的时候会将非父类身上的属性或者方法拷贝走，这个时候
+	 			通过hasOwnProperty来判断attr这些属性是不是父类自身的。
+	 		}
+	 	类式继承（性能最高的）
+	 	对象继承
+	当函数在声明的时候，函数会自带一些方法或者属性。
+	其中有个方法叫call还有个方法apply   他们最大的用处就是改变this指向
+		fn.call(改变this,实参)
+			实参：有几个形参就对应几个实参
+				  从第二个参数起，就是实参
+				  
+		fn.apply(改变this,数组);
+			第二个参数为数组，数组中放的就是实参的集合。
+		call可以有无限多个参数，而apply只有2个参数
